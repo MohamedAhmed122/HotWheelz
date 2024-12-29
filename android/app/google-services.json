@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "126548857376",
+    "project_id": "hotwheel-z",
+    "storage_bucket": "hotwheel-z.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126548857376:android:c5b25112a405851980e245",
+        "android_client_info": {
+          "package_name": "lt.android.hot.wheel.z"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs7d7_AN5Q82slSDgGEWD8laeXUuZdarc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126548857376-ieitmf9d3m50nttkac2pgittc0j55b11.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126548857376-9opnd7fokmfset0jstr3a96ld1v0r9cn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "lt.hot.wheel.z"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
