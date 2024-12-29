@@ -1,0 +1,6 @@
+framework module Pods_HotWheelz_HotWheelzTests {
+  umbrella header "Pods-HotWheelz-HotWheelzTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
