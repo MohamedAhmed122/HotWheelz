@@ -1,7 +1,8 @@
 import {COLORS} from '@styles/index';
-import {ActivityIndicator, StyleProp, Text, ViewStyle} from 'react-native';
+import {ActivityIndicator, StyleProp, ViewStyle} from 'react-native';
 import styles from './styles';
-import {AppPressableScale} from 'common/pressableScale';
+import ScalableContainer from 'common/scalableContainer';
+import {AppText} from 'common/text';
 
 export interface AppButtonProps {
   title: string;
@@ -19,20 +20,28 @@ export const AppButton: React.FC<AppButtonProps> = ({
   loading,
   disabled,
   style,
-}) => (
-  <AppPressableScale
-    activeScale={0.9}
-    onPress={onPress}
-    disabled={loading || disabled}
-    style={[
-      styles.container,
-      {backgroundColor: color, opacity: loading ? 0.6 : 1},
-      style,
-    ]}>
-    {loading ? (
-      <ActivityIndicator color={COLORS.white} size={'small'} />
-    ) : (
-      <Text style={styles.text}>{title}</Text>
-    )}
-  </AppPressableScale>
-);
+}) => {
+  const disable = loading || disabled;
+  const onButtonPress = () => {
+    if (!disable) {
+      onPress();
+    }
+  };
+  return (
+    <ScalableContainer
+      scaleOnPress={disable ? 1 : 0.92}
+      onPress={onButtonPress}
+      style={[
+        styles.container,
+        {backgroundColor: color, opacity: loading ? 0.6 : 1},
+        disable && styles.disableContainer,
+        style,
+      ]}>
+      {loading ? (
+        <ActivityIndicator color={COLORS.white} size={'small'} />
+      ) : (
+        <AppText style={styles.text}>{title}</AppText>
+      )}
+    </ScalableContainer>
+  );
+};

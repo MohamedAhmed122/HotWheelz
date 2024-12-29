@@ -1,24 +1,29 @@
-# Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+# for firebase
+$RNFirebaseAsStaticFramework = true 
+
+
+
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
+
 
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => :static
-  $RNFirebaseAsStaticFramework = true
+  use_frameworks! :linkage => linkage.to_sym
 end
-
-
 
 target 'HotWheelZ' do
   config = use_native_modules!
+  # for firebase
+  use_frameworks! :linkage => :static 
+
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -26,11 +31,11 @@ target 'HotWheelZ' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'FirebaseCore', :modular_headers => true
-  pod 'Firebase', :modular_headers => true
-  pod 'FirebaseCoreInternal', :modular_headers => true
-  pod 'GoogleUtilities', :modular_headers => true
-  
+  rn_maps_path = '../node_modules/react-native-maps'
+  pod 'react-native-google-maps', :path => rn_maps_path
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+
   target 'HotWheelZTests' do
     inherit! :complete
     # Pods for testing

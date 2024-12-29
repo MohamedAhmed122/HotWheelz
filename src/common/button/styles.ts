@@ -12,6 +12,9 @@ const styles = ScaledSheet.create({
     marginTop: 20,
     alignSelf: 'center',
   },
+  disableContainer: {
+    backgroundColor: COLORS.darkGray,
+  },
   text: {
     fontSize: 18,
     color: COLORS.white,
