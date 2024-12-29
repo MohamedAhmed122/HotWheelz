@@ -1,11 +1,6 @@
-import {StyleSheet, Text, View} from 'react-native';
+import MapButtons from '../MapButton';
+import MapBikerView from '../MapView';
 
-export default function index() {
-  return (
-    <View>
-      <Text>index</Text>
-    </View>
-  );
+export default function MapScreen() {
+  return <MapBikerView />;
 }
-
-const styles = StyleSheet.create({});

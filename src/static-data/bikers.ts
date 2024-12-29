@@ -48,8 +48,8 @@ export const bikers: Biker[] = [
     longitude: 25.259,
     text: 'is working Bolt on his bike',
     miles: 15,
-    joinable: true,
-    isSOS: false,
+    joinable: false,
+    isSOS: true,
     user: users[3],
   },
   {

@@ -31,14 +31,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>HotWheelz needs your location even in the background to ensure you stay connected to biking events and SOS features.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>HotWheelz uses your location to improve safety features and provide community-driven biking experiences.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>RobotoBlack.ttf</string>
@@ -53,6 +51,22 @@
 		<string>RobotoRegular.ttf</string>
 		<string>RobotoThin.ttf</string>
 		<string>RobotoThinItalic.ttf</string>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>Zocial.ttf</string>
+		<string>Fontisto.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
