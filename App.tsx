@@ -1,8 +1,14 @@
 import {StyleSheet, View} from 'react-native';
-import MapScreen from 'screens/map/MapScreen';
+
+import {NavigationContainer} from '@react-navigation/native';
+import AppNavigator from 'navigation/tabs';
 
 const App = () => {
-  return <MapScreen />;
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
 };
 
 const styles = StyleSheet.create({

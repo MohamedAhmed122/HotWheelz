@@ -9,7 +9,7 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {SuggestionRow} from './SuggestionRow';
 import {COLORS} from 'styles';
 
-// AIzaSyD8kMX3r5_zP5DAEpynVpa2Xa5ihSrz1vg
+// AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo
 
 const GOOGLE_API_KEY = 'AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo';
 

@@ -16,7 +16,7 @@ import {styles} from './styles';
 // import {users} from 'static-data/users';
 // import PlacesAutoComplete from './places-auto-complete';
 
-Geocoder.init('AIzaSyD8kMX3r5_zP5DAEpynVpa2Xa5ihSrz1vg');
+Geocoder.init('AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo');
 
 export default function MapButtons({
   onAddNewLocation,

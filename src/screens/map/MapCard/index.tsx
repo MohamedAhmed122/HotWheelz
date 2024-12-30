@@ -1,4 +1,4 @@
-import {Text, View, TouchableOpacity, Pressable, Image} from 'react-native';
+import {Text, View, TouchableOpacity, Pressable} from 'react-native';
 
 import {styles} from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,7 +22,7 @@ export function MapCard({
   onCancelPressed,
   onJoinUserEvent,
 }: Props) {
-  //   const navigation = useNavigation();
+ 
 
   const onNavigateToUserProfile = () => {
     // TODO:
@@ -53,11 +53,11 @@ export function MapCard({
             </Text>
           )}
         </View>
-        {/* {item.joinable && (
+        {item.joinable && (
           <AppBadge title={'Join'} onPress={onJoinUserEvent}>
             Join
           </AppBadge>
-        )} */}
+        )}
         {item.isSOS && (
           <AppBadge
             title="Help me"

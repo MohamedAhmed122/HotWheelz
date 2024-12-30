@@ -16,7 +16,7 @@
 
 
 // For Maps
-  [GMSServices provideAPIKey:@"AIzaSyD8kMX3r5_zP5DAEpynVpa2Xa5ihSrz1vg"];
+  [GMSServices provideAPIKey:@"AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo"];
   
   self.moduleName = @"HotWheelZ";
   // You can add your custom initial props in the dictionary below.

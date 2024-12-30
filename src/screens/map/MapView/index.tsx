@@ -1,11 +1,11 @@
 import {useRef, useState, useEffect} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
-import {View, FlatList, Image} from 'react-native';
+import {View, FlatList} from 'react-native';
 import styles from './styles';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+
 import {useGetCurrentLocation} from 'hooks/useGetCurrentLocation';
 import {Biker, bikers} from 'static-data/bikers';
 import {AppInput} from 'common/input';
