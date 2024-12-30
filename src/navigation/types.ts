@@ -38,14 +38,14 @@ export type EventsStackParamsList = {
 
 export type ProfileStackParamsList = {
   [ProfileStackParams.Profile]: NO_PARAMS;
-  [ProfileStackParams.EditProfile]: NO_PARAMS;
+  [ProfileStackParams.EditProfile]: {userId};
   [ProfileStackParams.CreateProfile]: NO_PARAMS;
   [ProfileStackParams.OtherProfile]: {userId: string};
 };
 
 export type ChatStackParamsList = {
   [ChatStackParams.ChatList]: NO_PARAMS;
-  [ChatStackParams.ChatRoom]: {chatId: string};
+  [ChatStackParams.ChatRoom]: {userId: string};
 };
 
 export type MapStackParamsList = {

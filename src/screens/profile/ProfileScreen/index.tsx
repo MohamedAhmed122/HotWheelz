@@ -1,34 +1,45 @@
-import React from 'react';
-import {
-  Linking,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useCallback} from 'react';
+import {SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
-// import { useNavigation } from '@react-navigation/native';
 
 import ProfileTabView from './components/profileTabs/ProfileTabView';
 import {User, users} from 'static-data/users';
-
 import {AppText} from 'common/text';
 import AppAvatar from 'common/avatar';
 import {COLORS} from 'styles';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  ChatStackParams,
+  ProfileStackParams,
+  ProfileStackParamsList,
+} from 'navigation/types';
+import {styles} from './styles';
 
-const Profile: React.FC<any> = ({navigation, route}) => {
-  const user = route.params?.user || users[12];
+type Props = NativeStackScreenProps<ProfileStackParamsList>;
 
-  const handleEditProfile = React.useCallback(
-    () => navigation.navigate('editProfile'),
+const ProfileScreen: React.FC<Props> = ({navigation}) => {
+  const user = users[12];
+
+  const handleEditProfile = useCallback(
+    () => navigation.navigate(ProfileStackParams.EditProfile, {userId: ''}),
     [navigation],
   );
+
+  const navigateToChatRoom = useCallback(() => {
+    navigation.navigate('Chat', {
+      screen: ChatStackParams.ChatRoom,
+      params: {userId: ''},
+    });
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        <UserProfile user={user} onEditProfile={handleEditProfile} />
+        <UserProfile
+          user={user}
+          onEditProfile={handleEditProfile}
+          navigateToChatRoom={navigateToChatRoom}
+        />
         <ProfileTabView username={user.username} />
       </ScrollView>
     </SafeAreaView>
@@ -38,134 +49,97 @@ const Profile: React.FC<any> = ({navigation, route}) => {
 interface UserProfileProps {
   user: User;
   onEditProfile: () => void;
+  navigateToChatRoom: () => void;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({user, onEditProfile}) => (
+const UserProfile: React.FC<UserProfileProps> = ({
+  user,
+  onEditProfile,
+  navigateToChatRoom,
+}) => (
   <View style={styles.profileContainer}>
     <View style={styles.profileCard}>
-      <View style={styles.avatarSection}>
-        <AppAvatar size={80} source={user.image} />
-        <ProfileSocialLinks />
-      </View>
-      <View>
-        <AppText style={styles.username}>{user.username}</AppText>
-        <AppText style={styles.bio}>{user.bio}</AppText>
-      </View>
-      {/* <View style={styles.actions}>
-        <AppButton
-          title="Edit Profile"
-          onPress={onEditProfile}
-          style={styles.actionButton}
-        />
-        <AppButton
-          title="Share Profile"
-          onPress={() => {}}
-          style={styles.actionButton}
-        />
-      </View> */}
+      <UserHeader
+        user={user}
+        onEditProfile={onEditProfile}
+        navigateToChatRoom={navigateToChatRoom}
+      />
+      <UserDetails username={user.username} bio={user.bio} />
     </View>
   </View>
 );
 
-const ProfileSocialLinks = () => {
-  const onNavigateToInstagram = () =>
-    Linking.openURL('https://www.instagram.com/mohameddesoukey98/');
+interface UserHeaderProps {
+  user: User;
+  onEditProfile: () => void;
+  navigateToChatRoom: () => void;
+}
 
-  return (
-    <View style={styles.socialLinksContainer}>
-      <SocialIcon icon="🚴🏿‍♂️" onPress={() => {}} />
-      <SocialIcon
-        IconComponent={Icon}
-        iconProps={{name: 'instagram', size: 29, color: COLORS.primary}}
-        onPress={onNavigateToInstagram}
-      />
-    </View>
-  );
-};
+const UserHeader: React.FC<UserHeaderProps> = ({
+  user,
+  onEditProfile,
+  navigateToChatRoom,
+}) => (
+  <View style={styles.avatarSection}>
+    <AppAvatar size={80} source={user.image} />
+    <ProfileSocialLinks
+      onEditProfile={onEditProfile}
+      navigateToChatRoom={navigateToChatRoom}
+    />
+  </View>
+);
 
-const SocialIcon = ({
-  onPress,
-  icon,
-  IconComponent,
-  iconProps,
-}: {
+interface UserDetailsProps {
+  username: string;
+  bio: string;
+}
+
+const UserDetails: React.FC<UserDetailsProps> = ({username, bio}) => (
+  <View>
+    <AppText style={styles.username}>{username}</AppText>
+    <AppText style={styles.bio}>{bio}</AppText>
+  </View>
+);
+
+interface ProfileSocialLinksProps {
+  onEditProfile: () => void;
+  navigateToChatRoom: () => void;
+}
+
+const ProfileSocialLinks: React.FC<ProfileSocialLinksProps> = ({
+  onEditProfile,
+  navigateToChatRoom,
+}) => (
+  <View style={styles.socialLinksContainer}>
+    <SocialIcon icon="🚴🏿‍♂️" onPress={navigateToChatRoom} />
+    <SocialIcon
+      IconComponent={Icon}
+      iconProps={{name: 'edit', size: 24, color: COLORS.primary}}
+      onPress={onEditProfile}
+    />
+  </View>
+);
+
+interface SocialIconProps {
   onPress: () => void;
   icon?: string;
   IconComponent?: React.ComponentType<any>;
   iconProps?: object;
+}
+
+const SocialIcon: React.FC<SocialIconProps> = ({
+  onPress,
+  icon,
+  IconComponent,
+  iconProps,
 }) => (
   <TouchableOpacity style={styles.iconContainer} onPress={onPress}>
     {IconComponent ? (
       <IconComponent {...iconProps} />
     ) : (
-      <AppText style={{fontSize: 20}}>{icon}</AppText>
+      <AppText style={styles.iconText}>{icon}</AppText>
     )}
   </TouchableOpacity>
 );
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollViewContent: {
-    flexGrow: 1,
-  },
-  profileContainer: {
-    padding: 20,
-  },
-  profileCard: {
-    elevation: 0,
-  },
-  avatarSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-
-  username: {
-    alignSelf: 'flex-start',
-    marginTop: 10,
-    fontWeight: 'bold',
-    color: '#191F33',
-  },
-  bio: {
-    marginTop: 20,
-    color: '#464D61',
-    // textAlign: 'center',
-  },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  actionButton: {
-    flex: 1,
-    margin: 4,
-    backgroundColor: '#e5e5e5',
-  },
-  socialLinksContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  iconContainer: {
-    backgroundColor: 'white',
-    margin: 10,
-    width: 60,
-    height: 60,
-    marginTop: 20,
-    borderRadius: 20,
-    shadowColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-});
-
-export default Profile;
+export default ProfileScreen;

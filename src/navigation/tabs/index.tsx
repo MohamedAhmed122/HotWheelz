@@ -2,7 +2,6 @@ import React, {memo} from 'react';
 
 import {
   AnimatedTabBarNavigator,
-  DotSize,
   TabElementDisplayOptions,
 } from 'react-native-animated-nav-tab-bar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
