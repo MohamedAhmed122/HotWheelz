@@ -5,18 +5,28 @@ import {AppButton} from 'common/button';
 import {AppInput} from 'common/input';
 import {AppText} from 'common/text';
 import {loginValidationSchema} from './utils';
-import {useState} from 'react';
-import {loginWithEmail} from 'service/auth';
+import {useEffect, useState} from 'react';
+import {getCurrentUser, loginWithEmail} from 'service/auth';
+import useStore from 'store';
 
 export default function LoginScreen() {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const {isAuthenticated, updateIsAuthenticated, updateUser} = useStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      updateUser(getCurrentUser());
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = async (values: {email: string; password: string}) => {
     try {
       setLoading(true);
       setErr(null);
       await loginWithEmail(values.email, values.password);
+      updateIsAuthenticated(true);
     } catch (error: any) {
       setErr(error.message);
     } finally {

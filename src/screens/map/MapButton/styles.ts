@@ -41,11 +41,10 @@ export const styles = ScaledSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     width: '90%',
-    marginBottom: '10%',
+    marginBottom: '25%',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: '5%',
-    marginTop: 500,
   },
   sosText: {
     color: COLORS.danger,

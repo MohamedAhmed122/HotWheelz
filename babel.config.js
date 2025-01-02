@@ -16,6 +16,7 @@ module.exports = {
           '@common': './src/common',
           '@hooks': './src/hooks',
           '@navigation': './src/navigation',
+          '@assets': './src/assets',
         },
       },
     ],

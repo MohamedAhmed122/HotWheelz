@@ -5,12 +5,21 @@ import {AppButton} from 'common/button';
 import {AppInput} from 'common/input';
 import {AppText} from 'common/text';
 import {registerValidationSchema} from './utils';
-import {useState} from 'react';
-import {registerWithEmail} from 'service/auth';
+import {useEffect, useState} from 'react';
+import {getCurrentUser, registerWithEmail} from 'service/auth';
+import useStore from 'store';
 
 export default function RegisterScreen() {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const {isAuthenticated, updateIsAuthenticated, updateUser} = useStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      updateUser(getCurrentUser());
+    }
+  }, [isAuthenticated]);
 
   const handleRegister = async (values: {
     email: string;
@@ -21,6 +30,7 @@ export default function RegisterScreen() {
       setLoading(true);
       setErr(null);
       await registerWithEmail(values.email, values.password);
+      updateIsAuthenticated(true);
     } catch (error: any) {
       setErr(error.message);
     } finally {

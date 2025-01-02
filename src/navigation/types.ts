@@ -11,7 +11,7 @@ export enum EventsStackParams {
 }
 
 export enum ProfileStackParams {
-  Profile = 'Profile',
+  Profile = 'UserProfile',
   EditProfile = 'EditProfile',
   CreateProfile = 'CreateProfile',
   OtherProfile = 'OtherProfiles',

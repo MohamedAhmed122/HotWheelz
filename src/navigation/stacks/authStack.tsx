@@ -8,11 +8,11 @@ const Stack = createStackNavigator<AuthStackParamsList>();
 const AuthStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={AuthStackParams.Login} component={LoginScreen} />
       <Stack.Screen
         name={AuthStackParams.Register}
         component={RegisterScreen}
       />
+      <Stack.Screen name={AuthStackParams.Login} component={LoginScreen} />
     </Stack.Navigator>
   );
 };

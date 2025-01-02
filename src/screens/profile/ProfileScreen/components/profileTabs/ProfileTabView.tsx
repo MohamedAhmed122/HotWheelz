@@ -3,6 +3,7 @@ import {useState} from 'react';
 import EventTab from './EventTab';
 import PhotoTab from './PhotoTabs';
 import SavedTab from './SavedTab';
+import {Profile} from 'service/profile';
 
 enum ProfileTabsType {
   PHOTO_TAB = 'PHOTO_TAB',
@@ -24,7 +25,7 @@ const tabs = [
     tabName: 'Saved',
   },
 ];
-export default function ProfileTabView({username}: {username: string}) {
+export default function ProfileTabView({profile}: {profile: Profile}) {
   const [activeTab, setActiveTab] = useState<string>(tabs[0].tabKey);
 
   return (
@@ -32,7 +33,7 @@ export default function ProfileTabView({username}: {username: string}) {
       <AppTab activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
       {activeTab === ProfileTabsType.EVENT_TAB && <EventTab />}
       {activeTab === ProfileTabsType.PHOTO_TAB && (
-        <PhotoTab username={username} />
+        <PhotoTab username={profile.username} />
       )}
       {activeTab === ProfileTabsType.SAVED_TAB && <SavedTab />}
     </>

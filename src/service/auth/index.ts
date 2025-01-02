@@ -5,8 +5,7 @@ export const registerWithEmail = async (
   password: string,
 ): Promise<void> => {
   try {
-    const res = await auth().createUserWithEmailAndPassword(email, password);
-    console.log(res, '...');
+    await auth().createUserWithEmailAndPassword(email, password);
   } catch (error) {
     throw new Error(error.message);
   }

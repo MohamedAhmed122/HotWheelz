@@ -1,10 +1,10 @@
 import {AppInput} from 'common/input';
 
 import ModalView from 'components/ModalView';
-import PlacesAutoCompleteInput from 'components/PlacesAutoCompelete';
+import PlacesAutoCompleteInput, {
+  LocationType,
+} from 'components/PlacesAutoCompelete';
 import {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {GooglePlaceData} from 'react-native-google-places-autocomplete';
 
 export default function SosModal({
   isVisible,
@@ -14,7 +14,7 @@ export default function SosModal({
   onClose(): void;
 }) {
   const [text, setText] = useState('');
-  const [location, setLocation] = useState<GooglePlaceData>();
+  const [location, setLocation] = useState<LocationType>();
   return (
     <ModalView
       title="What is your emergency?"
@@ -29,7 +29,7 @@ export default function SosModal({
         <PlacesAutoCompleteInput onChangeLocation={setLocation} />
         <AppInput
           placeholder="More details"
-          inputContainerStyle={styles.descInput}
+          isMulti
           value={text}
           onChangeText={setText}
         />
@@ -38,13 +38,3 @@ export default function SosModal({
     </ModalView>
   );
 }
-
-const styles = StyleSheet.create({
-  descInput: {
-    padding: 2,
-    minHeight: 100,
-    paddingTop: 10,
-    borderRadius: 15,
-    alignItems: 'flex-start',
-  },
-});

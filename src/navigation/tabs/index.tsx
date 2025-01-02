@@ -4,6 +4,7 @@ import {
   AnimatedTabBarNavigator,
   TabElementDisplayOptions,
 } from 'react-native-animated-nav-tab-bar';
+import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EventsStack from 'navigation/stacks/eventsStack';
 import ProfileStack from 'navigation/stacks/profileStack';
@@ -38,14 +39,20 @@ const AppNavigator = () => {
       <Tab.Screen
         name="Events"
         component={EventsStack}
-        options={{
-          tabBarIcon: ({focused, color}) => (
-            <MaterialIcons
-              name="event"
-              size={24}
-              color={focused ? COLORS.primary : color}
-            />
-          ),
+        options={({route}) => {
+          const routeName = getFocusedRouteNameFromRoute(route);
+          return {
+            tabBarStyle: {
+              display: routeName === 'EventDetails' ? 'none' : 'flex',
+            },
+            tabBarIcon: ({focused, color}) => (
+              <MaterialIcons
+                name="event"
+                size={24}
+                color={focused ? COLORS.primary : color}
+              />
+            ),
+          };
         }}
       />
       <Tab.Screen
@@ -91,4 +98,4 @@ const AppNavigator = () => {
   );
 };
 
-export default memo(AppNavigator);
+export default AppNavigator;

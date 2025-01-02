@@ -1,23 +1,30 @@
-import {StyleSheet, View} from 'react-native';
-
 import {NavigationContainer} from '@react-navigation/native';
+import {useAppInit} from 'hooks/useAppInit';
+import AuthStack from 'navigation/stacks/authStack';
 import AppNavigator from 'navigation/tabs';
+import {useEffect} from 'react';
+import {getTodaysMapEvents} from 'service/mapEvents/get-mapEvents';
+import useStore from 'store';
 
 const App = () => {
+  const {isAuthenticated} = useStore();
+  useAppInit();
+
+  const handle = async () => {
+    const {data, error} = await getTodaysMapEvents();
+    console.log('data:', JSON.stringify(data.length));
+    console.log('error:', JSON.stringify(error));
+  };
+
+  useEffect(() => {
+    handle();
+  }, []);
+
   return (
     <NavigationContainer>
-      <AppNavigator />
+      {isAuthenticated ? <AppNavigator /> : <AuthStack />}
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    paddingTop: 100 + 10,
-    backgroundColor: '#ecf0f1',
-  },
-});
 
 export default App;

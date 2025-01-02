@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 
 import ProfileTabView from './components/profileTabs/ProfileTabView';
-import {User, users} from 'static-data/users';
+
 import {AppText} from 'common/text';
 import AppAvatar from 'common/avatar';
 import {COLORS} from 'styles';
@@ -14,11 +14,16 @@ import {
   ProfileStackParamsList,
 } from 'navigation/types';
 import {styles} from './styles';
+import useStore from 'store';
+import {Profile, getUserProfile} from 'service/profile';
+import CreateProfileScreen from '../CreateProfileScreen';
 
 type Props = NativeStackScreenProps<ProfileStackParamsList>;
 
 const ProfileScreen: React.FC<Props> = ({navigation}) => {
-  const user = users[12];
+  const {user: currentUser, updateProfile} = useStore();
+  const [error, setError] = useState<string | undefined>();
+  const [profile, setProfile] = useState<Profile | undefined>();
 
   const handleEditProfile = useCallback(
     () => navigation.navigate(ProfileStackParams.EditProfile, {userId: ''}),
@@ -26,62 +31,94 @@ const ProfileScreen: React.FC<Props> = ({navigation}) => {
   );
 
   const navigateToChatRoom = useCallback(() => {
+    // @ts-ignore
     navigation.navigate('Chat', {
       screen: ChatStackParams.ChatRoom,
       params: {userId: ''},
     });
   }, [navigation]);
 
+  const handleGetUserProfile = () => {
+    getUserProfile(currentUser.uid).then(res => {
+      setProfile(res.data);
+      res.data && updateProfile(res.data);
+      setError(res.error);
+    });
+  };
+
+  useEffect(() => {
+    if (currentUser?.uid) {
+      handleGetUserProfile();
+    }
+  }, [currentUser]);
+
+  if (error === 'NOT_FOUND') {
+    return <CreateProfileScreen getUserProfile={handleGetUserProfile} />;
+  }
+  if (error) {
+    return <View>Error please try again Later</View>;
+  }
+
+  if (!profile) {
+    return (
+      <View>
+        <AppText>loading...</AppText>
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <UserProfile
-          user={user}
+          profile={profile}
           onEditProfile={handleEditProfile}
           navigateToChatRoom={navigateToChatRoom}
         />
-        <ProfileTabView username={user.username} />
+        <ProfileTabView profile={profile} />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 interface UserProfileProps {
-  user: User;
+  profile: Profile;
   onEditProfile: () => void;
   navigateToChatRoom: () => void;
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({
-  user,
+  profile,
   onEditProfile,
   navigateToChatRoom,
-}) => (
-  <View style={styles.profileContainer}>
-    <View style={styles.profileCard}>
-      <UserHeader
-        user={user}
-        onEditProfile={onEditProfile}
-        navigateToChatRoom={navigateToChatRoom}
-      />
-      <UserDetails username={user.username} bio={user.bio} />
+}) => {
+  return (
+    <View style={styles.profileContainer}>
+      <View style={styles.profileCard}>
+        <UserHeader
+          profile={profile}
+          onEditProfile={onEditProfile}
+          navigateToChatRoom={navigateToChatRoom}
+        />
+        <UserDetails username={profile.username} bio={profile.bio} />
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 interface UserHeaderProps {
-  user: User;
+  profile: Profile;
   onEditProfile: () => void;
   navigateToChatRoom: () => void;
 }
 
 const UserHeader: React.FC<UserHeaderProps> = ({
-  user,
+  profile,
   onEditProfile,
   navigateToChatRoom,
 }) => (
   <View style={styles.avatarSection}>
-    <AppAvatar size={80} source={user.image} />
+    <AppAvatar size={80} source={profile.photo} />
     <ProfileSocialLinks
       onEditProfile={onEditProfile}
       navigateToChatRoom={navigateToChatRoom}

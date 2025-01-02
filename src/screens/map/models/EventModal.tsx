@@ -1,12 +1,13 @@
 import Checkbox from 'common/checkbox';
 import {AppInput} from 'common/input';
 import ModalView from 'components/ModalView';
-import PlacesAutoCompleteInput from 'components/PlacesAutoCompelete';
+import PlacesAutoCompleteInput, {
+  LocationType,
+} from 'components/PlacesAutoCompelete';
 import {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {GooglePlaceData} from 'react-native-google-places-autocomplete';
-import Modal from 'react-native-modal';
-import {COLORS} from 'styles';
+import {StyleSheet, View} from 'react-native';
+import {createMapEvent} from 'service/mapEvents/create-mapEvents';
+import useStore from 'store';
 
 export default function EventModal({
   isVisible,
@@ -16,20 +17,37 @@ export default function EventModal({
   onClose(): void;
 }) {
   const [text, setText] = useState('');
-  const [location, setLocation] = useState<GooglePlaceData>();
+  const [location, setLocation] = useState<LocationType>();
   const [isAgreed, setIsAgreed] = useState(false);
+  const {profile} = useStore();
+
+  const onCreateEvent = async () => {
+    if (profile) {
+      const result = await createMapEvent(profile, {
+        userLocation: {lat: location.lat, lng: location.lng},
+        address: location.address,
+        city: location.city,
+        description: text,
+        isJoinable: isAgreed,
+        isSOS: false,
+        title: '',
+      });
+      console.log(result, 'result');
+    }
+  };
+
   return (
     <ModalView
       title="Let's go for ride"
       onClose={onClose}
       visible={isVisible}
-      onSubmitModal={onClose}>
+      onSubmitModal={() => onCreateEvent()}>
       <>
         <PlacesAutoCompleteInput onChangeLocation={setLocation} />
 
         <AppInput
+          isMulti
           placeholder="Details"
-          inputContainerStyle={styles.descInput}
           value={text}
           onChangeText={setText}
         />

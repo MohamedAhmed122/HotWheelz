@@ -1,39 +1,84 @@
 import 'react-native-get-random-values';
 
-import {
-  GooglePlacesAutocomplete,
-  GooglePlaceData,
-} from 'react-native-google-places-autocomplete';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 import {ScaledSheet} from 'react-native-size-matters';
 import {SuggestionRow} from './SuggestionRow';
 import {COLORS} from 'styles';
-
+import axios from 'axios';
 // AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo
 
 const GOOGLE_API_KEY = 'AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo';
+
+export type LocationType = {
+  lat: number;
+  lng: number;
+  city: string;
+  country: string;
+  address: string;
+};
 
 export default function PlacesAutoCompleteInput({
   onChangeLocation,
   placeholder = 'Location',
 }: {
-  onChangeLocation(state: GooglePlaceData): void;
+  onChangeLocation(state: LocationType): void;
   placeholder?: string;
 }) {
+  const fetchPlaceDetails = async (placeId: string) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/details/json`,
+        {
+          params: {
+            place_id: placeId,
+            key: GOOGLE_API_KEY,
+          },
+        },
+      );
+
+      const details = response.data.result;
+
+      const lat = details.geometry.location.lat;
+      const lng = details.geometry.location.lng;
+
+      const addressComponents = details.address_components;
+
+      const city = addressComponents.find((comp: any) =>
+        comp.types.includes('locality'),
+      )?.long_name;
+
+      const country = addressComponents.find((comp: any) =>
+        comp.types.includes('country'),
+      )?.long_name;
+
+      const formattedAddress = details.formatted_address;
+
+      // Call the onChangeLocation callback with the location data
+      onChangeLocation({
+        lat,
+        lng,
+        city: city || '',
+        country: country || '',
+        address: formattedAddress || '',
+      });
+    } catch (error) {
+      console.error('Error fetching place details:', error);
+    }
+  };
+
   return (
     <GooglePlacesAutocomplete
       placeholder={placeholder}
       enablePoweredByContainer={false}
-      currentLocation={true}
       currentLocationLabel={placeholder}
       styles={{
         textInput: styles.textInput,
       }}
-      onPress={(data, details = null) => {
-        console.log('a7a...');
-        console.log(JSON.stringify({data, details}));
-        onChangeLocation(data);
-        console.log(JSON.stringify(details?.geometry?.location));
+      onPress={data => {
+        if (data.place_id) {
+          fetchPlaceDetails(data.place_id);
+        }
       }}
       textInputProps={{
         leftIcon: {type: 'font-awesome', name: 'chevron-left'},
@@ -49,6 +94,7 @@ export default function PlacesAutoCompleteInput({
         enablePoweredByContainer: false,
       }}
       suppressDefaultStyles
+      debounce={300}
       renderRow={item => <SuggestionRow item={item?.description} />}
     />
   );

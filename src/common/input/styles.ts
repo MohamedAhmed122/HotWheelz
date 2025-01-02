@@ -23,6 +23,13 @@ const styles = ScaledSheet.create({
     fontSize: 18,
     flex: 1,
   },
+  descInput: {
+    padding: 2,
+    minHeight: 100,
+    paddingTop: 10,
+    borderRadius: 15,
+    alignItems: 'flex-start',
+  },
 });
 
 export default styles;
