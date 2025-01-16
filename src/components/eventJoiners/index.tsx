@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import React from 'react';
+
 import {
   View,
   Image,
@@ -11,9 +13,11 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import {AppText} from 'common/text';
 import {styles} from './styles';
 import {COLORS} from 'styles';
+import {Joiner} from 'service/organizedEvents';
+import AppAvatar from 'common/avatar';
 
 type Props = {
-  joiners: Array<{id: string; image: string}>;
+  joiners: Array<Joiner>;
   joinedCount: number;
   showSeeAll?: boolean;
   joinersCounterDisplay?: number;
@@ -31,7 +35,8 @@ export default function EventJoiner({
     joinersCounterDisplay,
   );
 
-  const handleAvatarPress = (user: {id: string; image: string}) => {
+  const handleAvatarPress = (user: Joiner) => {
+    console.log(user);
     // TODO: Navigate to the user's profile
   };
 
@@ -48,14 +53,13 @@ export default function EventJoiner({
   const renderJoiners = () => (
     <View style={styles.avatarContainer}>
       {joiners.slice(0, joinersDisplayCount).map((joiner, index) => (
-        <Pressable key={joiner.id} onPress={() => handleAvatarPress(joiner)}>
-          <Image
-            source={{uri: joiner.image}}
-            resizeMode="cover"
-            style={[
-              styles.avatar,
-              {marginLeft: index !== 0 ? -15 : 0, width: 45, height: 45},
-            ]}
+        <Pressable
+          key={joiner.userId}
+          onPress={() => handleAvatarPress(joiner)}>
+          <AppAvatar
+            source={joiner.photo}
+            size={45}
+            style={[{marginLeft: index !== 0 ? -15 : 0}]}
           />
         </Pressable>
       ))}
@@ -78,6 +82,10 @@ export default function EventJoiner({
         )}
       </View>
     );
+
+  // if (joinedCount === 0) {
+  //   return <></>;
+  // }
 
   return (
     <View>

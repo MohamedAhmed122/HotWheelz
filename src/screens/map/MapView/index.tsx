@@ -1,4 +1,4 @@
-import {useRef, useState, useEffect} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import {View, FlatList} from 'react-native';
@@ -7,25 +7,26 @@ import styles from './styles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {useGetCurrentLocation} from 'hooks/useGetCurrentLocation';
-import {Biker, bikers} from 'static-data/bikers';
+
 import {AppInput} from 'common/input';
 import {AppText} from 'common/text';
 import {MapCard} from '../MapCard';
 import MapButtons from '../MapButton';
+import {IMapEvents} from 'service/map-events';
 
 enum ActiveView {
   UserEvent = 'UserEvent',
   SOSButton = 'SOSButton',
 }
 
-const MapBikerView = () => {
+const MapBikerView = ({events}: {events: IMapEvents[]}) => {
   const [selectedLocation, setSelectedLocation] = useState('');
 
   const [activeView, setActiveView] = useState(ActiveView.SOSButton);
 
   const {location} = useGetCurrentLocation();
 
-  const [bikersLocation, setBikersLocation] = useState(bikers);
+  const [bikersLocation, setBikersLocation] = useState<IMapEvents[]>(events);
 
   const onJoinUserEvent = (latitude: number, longitude: number) => {};
   // navigation.navigate(MapStackParams.mapDirections, { latitude, longitude });
@@ -48,8 +49,8 @@ const MapBikerView = () => {
 
     const selectedPlace = bikersLocation[index];
     const region = {
-      latitude: selectedPlace.latitude,
-      longitude: selectedPlace.longitude,
+      latitude: selectedPlace.userLocation.lat,
+      longitude: selectedPlace.userLocation.lng,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     };
@@ -61,13 +62,9 @@ const MapBikerView = () => {
     setActiveView(ActiveView.UserEvent);
   };
 
-  const onAddNewLocation = (newBiker: Biker) => {
-    setBikersLocation(biker => [...biker, newBiker]);
-  };
-
   return (
     <>
-      <View
+      {/* <View
         style={{
           width: '100%',
           backgroundColor: 'white',
@@ -75,9 +72,7 @@ const MapBikerView = () => {
           zIndex: 10,
           borderBottomLeftRadius: 32,
           borderBottomRightRadius: 32,
-        }}>
-        <AppInput placeholder="Destination" />
-      </View>
+        }}></View> */}
       <View style={styles.mapContainer}>
         <MapView
           ref={map}
@@ -103,8 +98,8 @@ const MapBikerView = () => {
               onPress={() => onSelectBiker(biker.id)}
               key={biker.id}
               coordinate={{
-                latitude: biker.latitude,
-                longitude: biker.longitude,
+                latitude: biker.userLocation.lat,
+                longitude: biker.userLocation.lng,
               }}>
               {biker.isSOS ? (
                 <View
@@ -160,9 +155,7 @@ const MapBikerView = () => {
             />
           )}
         </View>
-        {activeView === ActiveView.SOSButton && (
-          <MapButtons onAddNewLocation={onAddNewLocation} />
-        )}
+        {activeView === ActiveView.SOSButton && <MapButtons />}
       </View>
     </>
   );

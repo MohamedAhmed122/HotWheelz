@@ -9,7 +9,6 @@ import Geocoder from 'react-native-geocoding';
 
 import SosModal from '../models/SosModal';
 import EventModal from '../models/EventModal';
-import {Biker} from 'static-data/bikers';
 import {COLORS} from 'styles';
 import React = require('react');
 import {styles} from './styles';
@@ -18,11 +17,7 @@ import {styles} from './styles';
 
 Geocoder.init('AIzaSyACCMN-X9DexzrTdlpjSj1LfGnlIXqsNqo');
 
-export default function MapButtons({
-  onAddNewLocation,
-}: {
-  onAddNewLocation(biker: Biker): void;
-}) {
+export default function MapButtons() {
   const [isSosModalVisible, setIsSosModalVisible] = useState(false);
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false);
 

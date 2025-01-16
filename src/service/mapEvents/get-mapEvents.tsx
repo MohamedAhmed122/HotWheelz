@@ -1,6 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 import {MapEvent} from './create-mapEvents';
 
+export interface MapEventsWithJoiners extends MapEvent {
+  joiners: [userId: string, username: string, photo: string];
+}
+
 export const getTodaysMapEvents = async (): Promise<{
   data: MapEvent[];
   error: boolean;
@@ -51,7 +55,7 @@ export const getUserMapEvents = async (
 
 export const updateMapEvent = async (
   eventId: string,
-  updatedFields: Partial<MapEvent>,
+  updatedFields: Partial<MapEventsWithJoiners>,
 ): Promise<{isSuccess: boolean; isError: boolean}> => {
   try {
     // Ensure the eventId is valid

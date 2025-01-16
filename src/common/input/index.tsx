@@ -5,18 +5,24 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-
 import styles from './styles';
+import React from 'react';
+import {COLORS} from 'styles';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-interface Props extends TextInputProps {
+export interface AppInputProps extends TextInputProps {
   inputContainerStyle?: StyleProp<ViewStyle>;
   isMulti?: boolean;
+  rightIconName?: string;
+  LeftIcon?: React.FC;
 }
 
-export const AppInput: React.FC<Props> = ({
+export const AppInput: React.FC<AppInputProps> = ({
   children,
   isMulti = false,
   inputContainerStyle,
+  rightIconName,
+  LeftIcon,
   ...otherProps
 }) => {
   return (
@@ -26,6 +32,9 @@ export const AppInput: React.FC<Props> = ({
         isMulti && styles.descInput,
         inputContainerStyle,
       ]}>
+      {rightIconName && (
+        <AntDesign name={rightIconName} color={COLORS.darkGray} size={20} />
+      )}
       {children}
       <TextInput
         autoCapitalize="none"
@@ -33,6 +42,7 @@ export const AppInput: React.FC<Props> = ({
         style={styles.inputText}
         {...otherProps}
       />
+      {LeftIcon && <LeftIcon />}
     </View>
   );
 };

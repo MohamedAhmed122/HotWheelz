@@ -8,23 +8,23 @@ import {
 } from 'react-native';
 import {COLORS} from '@styles/index';
 
-interface Props extends TouchableOpacityProps {
+interface Props extends Omit<TouchableOpacityProps, 'style'> {
   color?: string;
   title: string;
   onPress?(): void;
-  style?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
 export const AppBadge: React.FC<Props> = ({
   color = COLORS.secondary,
   title,
   onPress,
-  style,
+  containerStyle,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.container, {backgroundColor: color}, style]}>
+      style={[styles.container, {backgroundColor: color}, containerStyle]}>
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -36,8 +36,7 @@ const styles = StyleSheet.create({
     width: 105,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 20,
-    margin: 7,
+    borderRadius: 10,
   },
   text: {
     fontSize: 15,

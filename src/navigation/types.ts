@@ -3,11 +3,16 @@ type NO_PARAMS = undefined;
 export enum AuthStackParams {
   Login = 'Login',
   Register = 'Register',
+  AuthUploadPhoto = 'AuthUploadPhoto',
+  AuthUsername = 'AuthUsername',
+  AuthBio = 'AuthBio',
+  AuthLocation = 'AuthLocation',
 }
 
 export enum EventsStackParams {
   EventsList = 'EventsList',
   EventDetails = 'EventDetails',
+  CreateEvents = 'CreateEvents',
 }
 
 export enum ProfileStackParams {
@@ -29,11 +34,16 @@ export enum MapStackParams {
 export type AuthStackParamsList = {
   [AuthStackParams.Login]: NO_PARAMS;
   [AuthStackParams.Register]: NO_PARAMS;
+  [AuthStackParams.AuthBio]: NO_PARAMS;
+  [AuthStackParams.AuthLocation]: NO_PARAMS;
+  [AuthStackParams.AuthUsername]: NO_PARAMS;
+  [AuthStackParams.AuthUploadPhoto]: NO_PARAMS;
 };
 
 export type EventsStackParamsList = {
   [EventsStackParams.EventsList]: NO_PARAMS;
   [EventsStackParams.EventDetails]: {eventId: string};
+  [EventsStackParams.CreateEvents]: NO_PARAMS;
 };
 
 export type ProfileStackParamsList = {

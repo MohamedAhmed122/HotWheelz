@@ -1,32 +1,36 @@
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import {Formik} from 'formik';
 
 import {AppButton} from 'common/button';
 import {AppInput} from 'common/input';
 import {AppText} from 'common/text';
-import {loginValidationSchema} from './utils';
-import {useEffect, useState} from 'react';
-import {getCurrentUser, loginWithEmail} from 'service/auth';
-import useStore from 'store';
 
-export default function LoginScreen() {
+import {loginWithEmail} from 'service/auth';
+
+import {Stepper} from 'common/stepper';
+import {AuthHeader} from 'components/AuthHeader';
+import {mvs} from 'react-native-size-matters';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AuthStackParams, AuthStackParamsList} from 'navigation/types';
+import {useState} from 'react';
+
+type Props = NativeStackScreenProps<AuthStackParamsList>;
+
+export default function LoginScreen({navigation}: Props) {
   const [err, setErr] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const {isAuthenticated, updateIsAuthenticated, updateUser} = useStore();
+  const {top} = useSafeAreaInsets();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      updateUser(getCurrentUser());
-    }
-  }, [isAuthenticated]);
+  const onPressRegister = () => navigation.navigate(AuthStackParams.Register);
 
   const handleLogin = async (values: {email: string; password: string}) => {
     try {
       setLoading(true);
       setErr(null);
       await loginWithEmail(values.email, values.password);
-      updateIsAuthenticated(true);
+      navigation.navigate(AuthStackParams.AuthUsername);
     } catch (error: any) {
       setErr(error.message);
     } finally {
@@ -35,52 +39,70 @@ export default function LoginScreen() {
   };
 
   return (
-    <Formik
-      initialValues={{email: '', password: ''}}
-      validationSchema={loginValidationSchema}
-      onSubmit={handleLogin}>
-      {({
-        handleChange,
-        handleBlur,
-        handleSubmit,
-        values,
-        errors,
-        touched,
-        isValid,
-      }) => (
-        <View style={styles.container}>
-          <AppText style={styles.title}>Welcome To HotWheelZ</AppText>
-          <AppInput
-            placeholder="email"
-            value={values.email}
-            onChangeText={handleChange('email')}
-            onBlur={handleBlur('email')}
-          />
-          {touched.email && errors.email && (
-            <AppText style={styles.error}>{errors.email}</AppText>
-          )}
-          <AppInput
-            placeholder="password"
-            value={values.password}
-            onChangeText={handleChange('password')}
-            onBlur={handleBlur('password')}
-            secureTextEntry
-          />
-          {touched.password && errors.password && (
-            <AppText style={styles.error}>{errors.password}</AppText>
-          )}
-          {err && <AppText style={styles.error}>{err}</AppText>}
-          <AppButton
-            title="Login"
-            onPress={handleSubmit}
-            disabled={!isValid || loading}
-          />
-          <View style={styles.registerContainer}>
-            <AppText>You don't have an account? Register</AppText>
+    <>
+      <View style={{marginTop: mvs(24) + top}}>
+        <Stepper currentIndex={0} steps={[0, 1, 2, 3, 4]} />
+      </View>
+
+      <AuthHeader
+        title="Login To Your Account"
+        subtitle="Enter your email and password to access your HotWheelz account and join the cycling community!"
+      />
+      <Formik
+        initialValues={{email: '', password: ''}}
+        // validationSchema={loginValidationSchema}
+        onSubmit={handleLogin}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          isValid,
+        }) => (
+          <View style={styles.container}>
+            <View>
+              <AppInput
+                placeholder="email"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+              />
+              {touched.email && errors.email && (
+                <AppText style={styles.error}>{errors.email}</AppText>
+              )}
+              <AppInput
+                placeholder="password"
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                secureTextEntry
+              />
+              {touched.password && errors.password && (
+                <AppText style={styles.error}>{errors.password}</AppText>
+              )}
+              {err && <AppText style={styles.error}>{err}</AppText>}
+            </View>
+            <View style={{width: '100%'}}>
+              <AppButton
+                title="Login"
+                onPress={handleSubmit}
+                disabled={!isValid || loading}
+              />
+              <Pressable
+                style={styles.registerContainer}
+                onPress={onPressRegister}>
+                <AppText style={{textAlign: 'center'}}>
+                  You don't have an account?
+                  <AppText style={styles.registerText}> Register</AppText>
+                </AppText>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      )}
-    </Formik>
+        )}
+      </Formik>
+    </>
   );
 }
 
@@ -88,8 +110,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     padding: 16,
+    marginBottom: 40,
   },
   title: {
     fontSize: 20,
@@ -105,5 +128,8 @@ const styles = StyleSheet.create({
   },
   registerContainer: {
     marginTop: 10,
+  },
+  registerText: {
+    fontWeight: 'bold',
   },
 });

@@ -1,5 +1,6 @@
-import {Text, View, TouchableOpacity, Image, Pressable} from 'react-native';
+import {Text, View, TouchableOpacity, Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import React from 'react';
 
 import {eventCardStyle as styles} from './styles';
 import {useToggle} from 'hooks/useToggle';
@@ -9,9 +10,12 @@ import {IconContainer} from 'common/iconContainer';
 import ListIcon from 'common/list';
 import EventJoiner from 'components/eventJoiners';
 import {GoingButton} from 'common/goingButton';
+import {IOrganizedEvent} from 'service/organizedEvents';
+import {formateLongDate} from 'utils/date';
+import AppAvatar from 'common/avatar';
 
 interface Props {
-  item: any;
+  item: IOrganizedEvent;
   onEventCardPressed?(): void;
 }
 
@@ -19,7 +23,7 @@ export default function EventCard({item, onEventCardPressed}: Props) {
   const {value: isGoing, toggleButton: toggleGoingButton} = useToggle();
   const {value: isWatched, toggleButton: toggleWatchButton} = useToggle();
 
-  const {user, description, title, address, date, joined, joinedUsers} = item;
+  const {user, description, title, address, startDate, joiners} = item;
 
   //   const navigation = useNavigation();
 
@@ -27,14 +31,8 @@ export default function EventCard({item, onEventCardPressed}: Props) {
     <TouchableOpacity style={styles.container} onPress={onEventCardPressed}>
       <View style={styles.main}>
         <Pressable style={styles.flex} onPress={() => {}}>
-          <Image
-            resizeMode="cover"
-            style={styles.avatar}
-            source={{
-              uri: user.image,
-            }}
-          />
-          <Text style={styles.username}> {user.name}</Text>
+          <AppAvatar source={user.photo} size={45} style={styles.avatar} />
+          <Text style={styles.username}> {user.username}</Text>
         </Pressable>
         <IconContainer
           style={styles.iconContainer}
@@ -48,10 +46,10 @@ export default function EventCard({item, onEventCardPressed}: Props) {
         <Text style={styles.desc} numberOfLines={2}>
           {description}
         </Text>
-        <ListIcon listText={date} icon="calendar-month" />
+        <ListIcon listText={formateLongDate(startDate)} icon="calendar-month" />
         <ListIcon listText={address} icon="location-pin" />
       </View>
-      <EventJoiner joiners={joinedUsers} joinedCount={joined} />
+      <EventJoiner joiners={joiners} joinedCount={joiners.length} />
       <View style={styles.likeContainer}>
         <GoingButton isGoing={isGoing} toggleButton={toggleGoingButton} />
       </View>

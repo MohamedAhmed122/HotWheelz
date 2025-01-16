@@ -50,7 +50,7 @@ export default function FixedIcon({onPress}: {onPress(): void}) {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 120,
     right: 20,
   },
   iconContainer: {

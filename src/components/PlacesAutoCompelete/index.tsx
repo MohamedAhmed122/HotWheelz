@@ -104,9 +104,9 @@ const styles = ScaledSheet.create({
   textInput: {
     width: '95%',
     marginLeft: '2.5%',
-    backgroundColor: COLORS.gray,
+    backgroundColor: COLORS.lightGray,
     minHeight: 50,
-    borderRadius: '15@s',
+    borderRadius: '12@s',
     padding: '10@s',
     display: 'flex',
     flexDirection: 'row',
@@ -114,6 +114,8 @@ const styles = ScaledSheet.create({
     marginTop: '20@vs',
     fontSize: 18,
     color: COLORS.black,
+    borderWidth: 1,
+    borderColor: COLORS.darkGray,
   },
 });
 // import React, { useState, useEffect, useRef } from 'react';

@@ -6,8 +6,8 @@ import PlacesAutoCompleteInput, {
 } from 'components/PlacesAutoCompelete';
 import {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {createMapEvent} from 'service/mapEvents/create-mapEvents';
-import useStore from 'store';
+import {useEventMap} from './useEventMap';
+import {AppText} from 'common/text';
 
 export default function EventModal({
   isVisible,
@@ -16,24 +16,21 @@ export default function EventModal({
   isVisible: boolean;
   onClose(): void;
 }) {
-  const [text, setText] = useState('');
+  const [description, setDescription] = useState('');
   const [location, setLocation] = useState<LocationType>();
-  const [isAgreed, setIsAgreed] = useState(false);
-  const {profile} = useStore();
+  const [isJoinable, setIsJoinable] = useState(false);
+  const {onCreateEventMap, isLoading, error} = useEventMap('EVENT', onClose);
 
-  const onCreateEvent = async () => {
-    if (profile) {
-      const result = await createMapEvent(profile, {
-        userLocation: {lat: location.lat, lng: location.lng},
-        address: location.address,
-        city: location.city,
-        description: text,
-        isJoinable: isAgreed,
-        isSOS: false,
-        title: '',
-      });
-      console.log(result, 'result');
-    }
+  const onEventCreationSuccess = () => setDescription('');
+
+  const onHandleEventCreation = async () => {
+    await onCreateEventMap(
+      description,
+      location,
+      isJoinable,
+      '',
+      onEventCreationSuccess,
+    );
   };
 
   return (
@@ -41,38 +38,38 @@ export default function EventModal({
       title="Let's go for ride"
       onClose={onClose}
       visible={isVisible}
-      onSubmitModal={() => onCreateEvent()}>
+      onSubmitModal={() => onHandleEventCreation()}
+      isLoading={isLoading}>
       <>
         <PlacesAutoCompleteInput onChangeLocation={setLocation} />
 
         <AppInput
           isMulti
           placeholder="Details"
-          value={text}
-          onChangeText={setText}
+          value={description}
+          onChangeText={setDescription}
         />
         <View style={styles.checkboxContainer}>
           <Checkbox
             label="Do you want other biker join you?"
-            checked={isAgreed}
-            onChange={checked => setIsAgreed(checked)}
+            checked={isJoinable}
+            onChange={checked => setIsJoinable(checked)}
           />
         </View>
+        {error && <AppText style={styles.errorText}>{error}</AppText>}
       </>
     </ModalView>
   );
 }
 
 const styles = StyleSheet.create({
-  descInput: {
-    padding: 2,
-    minHeight: 100,
-    paddingTop: 10,
-    borderRadius: 15,
-    alignItems: 'flex-start',
-  },
   checkboxContainer: {
     marginTop: 20,
     marginLeft: 10,
+  },
+  errorText: {
+    color: 'red',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

@@ -13,7 +13,7 @@ export default StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
   },
   mapCard: {
-    top: height > 700 ? '70%' : '65%',
+    top: '60%',
     marginLeft: '3%',
   },
 });

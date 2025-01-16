@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import {COLORS} from 'styles';
 import Animated, {
@@ -7,12 +7,18 @@ import Animated, {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
+import {AppText} from 'common/text';
 
-const CountdownTimer: React.FC = () => {
-  const initialTime = 1 * 60 * 60 * 1000 + 30 * 60 * 1000 + 15 * 1000; // 1 hour, 30 minutes, 15 seconds
-  const [timeRemaining, setTimeRemaining] = useState<number>(initialTime);
+interface CountdownTimerProps {
+  date: string;
+}
 
-  // Shared values for animation
+const CountdownTimer: React.FC<CountdownTimerProps> = ({date}) => {
+  const targetTime = new Date(date).getTime();
+  const [timeRemaining, setTimeRemaining] = useState<number>(
+    targetTime - Date.now(),
+  );
+
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -24,9 +30,8 @@ const CountdownTimer: React.FC = () => {
           return 0;
         }
 
-        // Trigger animation on each update
         scale.value = withSpring(1.2, {}, () => {
-          scale.value = withTiming(1); // Reset scale to normal
+          scale.value = withTiming(1);
         });
 
         return prevTime - 1000;
@@ -41,27 +46,41 @@ const CountdownTimer: React.FC = () => {
   }));
 
   const formatTime = (time: number) => {
-    const seconds = Math.floor((time / 1000) % 60);
-    const minutes = Math.floor((time / (1000 * 60)) % 60);
+    const days = Math.floor(time / (1000 * 60 * 60 * 24));
     const hours = Math.floor((time / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((time / (1000 * 60)) % 60);
+    const seconds = Math.floor((time / 1000) % 60);
 
     return (
       <View style={styles.timeContainer}>
+        {days > 0 && (
+          <Animated.View style={[styles.timeBox, animatedStyle]}>
+            <Text style={styles.timeValue}>
+              {days.toString().padStart(2, '0')}
+              <AppText style={styles.subText}>d</AppText>
+            </Text>
+          </Animated.View>
+        )}
         <Animated.View style={[styles.timeBox, animatedStyle]}>
           <Text style={styles.timeValue}>
             {hours.toString().padStart(2, '0')}
+            <AppText style={styles.subText}>h</AppText>
           </Text>
         </Animated.View>
         <Animated.View style={[styles.timeBox, animatedStyle]}>
           <Text style={styles.timeValue}>
             {minutes.toString().padStart(2, '0')}
+            <AppText style={styles.subText}>m</AppText>
           </Text>
         </Animated.View>
-        <Animated.View style={[styles.timeBox, animatedStyle]}>
-          <Text style={styles.timeValue}>
-            {seconds.toString().padStart(2, '0')}
-          </Text>
-        </Animated.View>
+        {!days && (
+          <Animated.View style={[styles.timeBox, animatedStyle]}>
+            <Text style={styles.timeValue}>
+              {seconds.toString().padStart(2, '0')}
+              <AppText style={styles.subText}>s</AppText>
+            </Text>
+          </Animated.View>
+        )}
       </View>
     );
   };
@@ -91,6 +110,9 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
     color: COLORS.primary,
+  },
+  subText: {
+    fontSize: 18,
   },
 });
 

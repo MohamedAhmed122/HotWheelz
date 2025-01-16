@@ -24,12 +24,10 @@ export const eventCardStyle = ScaledSheet.create({
   flex: {
     flexDirection: 'row',
     alignItems: 'center',
+    margin: 12,
   },
   avatar: {
-    width: '60@s',
-    height: '60@s',
-    borderRadius: '30@s',
-    margin: '10@s',
+    margin: '20@s',
   },
   username: {
     fontSize: 21,

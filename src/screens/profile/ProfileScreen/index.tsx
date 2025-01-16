@@ -17,11 +17,12 @@ import {styles} from './styles';
 import useStore from 'store';
 import {Profile, getUserProfile} from 'service/profile';
 import CreateProfileScreen from '../CreateProfileScreen';
+import {logout} from 'service/auth';
 
 type Props = NativeStackScreenProps<ProfileStackParamsList>;
 
 const ProfileScreen: React.FC<Props> = ({navigation}) => {
-  const {user: currentUser, updateProfile} = useStore();
+  const {user: currentUser, updateProfile, updateIsAuthenticated} = useStore();
   const [error, setError] = useState<string | undefined>();
   const [profile, setProfile] = useState<Profile | undefined>();
 
@@ -31,23 +32,26 @@ const ProfileScreen: React.FC<Props> = ({navigation}) => {
   );
 
   const navigateToChatRoom = useCallback(() => {
-    // @ts-ignore
-    navigation.navigate('Chat', {
-      screen: ChatStackParams.ChatRoom,
-      params: {userId: ''},
-    });
+    // // @ts-ignore
+    // navigation.navigate('Chat', {
+    //   screen: ChatStackParams.ChatRoom,
+    //   params: {userId: ''},
+    // });
+    logout();
+    updateIsAuthenticated(false);
   }, [navigation]);
 
   const handleGetUserProfile = () => {
-    getUserProfile(currentUser.uid).then(res => {
+    getUserProfile().then(res => {
       setProfile(res.data);
       res.data && updateProfile(res.data);
       setError(res.error);
     });
   };
-
+  console.log(error);
   useEffect(() => {
     if (currentUser?.uid) {
+      console.log('wowooww');
       handleGetUserProfile();
     }
   }, [currentUser]);

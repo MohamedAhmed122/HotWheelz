@@ -6,7 +6,8 @@ export const styles = ScaledSheet.create({
     backgroundColor: 'white',
     opacity: 0.9,
     margin: '7@mvs',
-    height: '135@mvs',
+    height: '165@mvs',
+
     borderRadius: '12@mvs',
     padding: '10@mvs',
     shadowColor: '#000',
@@ -22,12 +23,17 @@ export const styles = ScaledSheet.create({
     opacity: 0.7,
     backgroundColor: 'lightgray',
   },
+  currentUserCardContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.blue,
+  },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   username: {
     marginLeft: '10@mvs',
+    color: COLORS.primary,
   },
   description: {
     marginVertical: '7@mvs',
@@ -41,6 +47,7 @@ export const styles = ScaledSheet.create({
   distanceText: {
     fontSize: '13@s',
     fontWeight: '300',
+    marginBottom: 2,
   },
   chipText: {
     color: COLORS.primary,
@@ -49,5 +56,11 @@ export const styles = ScaledSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  joinersText: {
+    marginTop: 5,
+    color: COLORS.primary,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

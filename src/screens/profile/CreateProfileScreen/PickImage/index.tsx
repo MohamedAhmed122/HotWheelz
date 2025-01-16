@@ -1,10 +1,11 @@
-import {View, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import {
   launchImageLibrary,
   ImagePickerResponse,
 } from 'react-native-image-picker';
 import {COLORS} from 'styles';
-import Icon from 'react-native-vector-icons/Feather';
+import AppAvatar from 'common/avatar';
+import {AppText} from 'common/text';
 
 type ImagePickerProps = {
   imageUri?: string;
@@ -34,14 +35,20 @@ const ImagePicker: React.FC<ImagePickerProps> = ({imageUri, setImageUri}) => {
     <View style={styles.container}>
       {imageUri ? (
         <TouchableOpacity onPress={handleOpenGallery}>
-          <Image source={{uri: imageUri}} style={styles.image} />
+          <AppAvatar source={imageUri} size={200} />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity
-          style={[styles.pickImage, styles.image]}
-          onPress={handleOpenGallery}>
-          <Icon name="image" size={34} color={COLORS.primary} />
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity
+            style={[styles.pickImage, styles.image]}
+            onPress={handleOpenGallery}>
+            {/* <Icon name="image" size={34} color={COLORS.primary} /> */}
+            <Image source={require('assets/images/Bot.png')} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenGallery}>
+            <AppText style={styles.text}>Upload Photo</AppText>
+          </TouchableOpacity>
+        </>
       )}
     </View>
   );
@@ -63,6 +70,11 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.lightGray,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    marginTop: 20,
+    textDecorationLine: 'underline',
+    color: '#333',
   },
 });
 

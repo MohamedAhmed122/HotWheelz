@@ -7,20 +7,63 @@ import FeedInBox from '../feed/feed-inbox';
 import {AppButton} from 'common/button';
 import {EventDetailTabsType} from '../..';
 import {COLORS} from 'styles';
+import useStore from 'store';
+import {
+  IOrganizedEvent,
+  joinOrganizedEvent,
+  unJoinOrganizedEvent,
+} from 'service/organizedEvents';
+import {isJoinedToEvent} from 'utils/events-utils';
+import {useState} from 'react';
 
 const {width} = Dimensions.get('window');
 
-export default function EventFooter({activeTab}: {activeTab: string}) {
+type Props = {
+  eventDetail: IOrganizedEvent;
+  activeTab: string;
+};
+
+export default function EventFooter({activeTab, eventDetail}: Props) {
   const {bottom} = useSafeAreaInsets();
+  const {profile} = useStore();
+  const isJoiner = isJoinedToEvent(eventDetail.joiners, profile.userId);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const joinEvent = async () => {
+    setIsLoading(true);
+    if (isJoiner) {
+      await unJoinOrganizedEvent(eventDetail.id, {
+        userId: profile.userId,
+        photo: profile.photo,
+        username: profile.username,
+      });
+    } else {
+      await joinOrganizedEvent(eventDetail.id, {
+        userId: profile.userId,
+        photo: profile.photo,
+        username: profile.username,
+      });
+    }
+    setIsLoading(false);
+  };
+
   return (
     <View style={[{height: 50 + bottom}, styles.container]}>
       {activeTab === EventDetailTabsType.DETAILS && (
         <View style={styles.row}>
           <Text style={[styles.text]}>Be Adventurous 🚴🏿‍♂️</Text>
-          <AppButton title="Join" onPress={() => {}} style={styles.button} />
+          <AppButton
+            title="Join"
+            onPress={joinEvent}
+            style={styles.button}
+            loading={isLoading}
+          />
         </View>
       )}
-      {activeTab === EventDetailTabsType.FEED && <FeedInBox />}
+      {activeTab === EventDetailTabsType.FEED && (
+        <FeedInBox eventId={eventDetail.id} />
+      )}
     </View>
   );
 }

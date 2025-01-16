@@ -2,9 +2,10 @@ import storage from '@react-native-async-storage/async-storage';
 import {create, StoreApi} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import {AuthSlice, createAuthSlice} from './authSlice';
+import {createProfileSlice, ProfileSlice} from './profileSlice';
 
 // zustand store
-export type StoreState = AuthSlice;
+export type StoreState = AuthSlice & ProfileSlice;
 
 const zustandStorage = {
   setItem: (name: string, value: any) => {
@@ -29,6 +30,7 @@ const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
       ...createAuthSlice(set, get),
+      ...createProfileSlice(set, get),
     }),
     {
       name: 'student_app_store',

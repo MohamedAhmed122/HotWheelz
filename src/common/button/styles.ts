@@ -6,7 +6,7 @@ const styles = ScaledSheet.create({
     width: '90%',
     padding: 13,
     paddingVertical: 15,
-    borderRadius: 25,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 20,

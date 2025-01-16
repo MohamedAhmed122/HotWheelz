@@ -28,3 +28,11 @@ const App = () => {
 };
 
 export default App;
+
+// TODO:
+// today
+// 1- finish the new Authentication system
+// 2-  Add To Favorite
+// 4-  other profile
+// 3- Finish Chat UI
+// mohamed_ahmed19@gmail.com

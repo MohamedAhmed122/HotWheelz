@@ -41,7 +41,7 @@ export const styles = ScaledSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     width: '90%',
-    marginBottom: '25%',
+    marginBottom: '30%',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginHorizontal: '5%',

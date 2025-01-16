@@ -1,6 +1,6 @@
-import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
 
 export interface Profile {
   username: string;
@@ -19,13 +19,13 @@ export interface Profile {
 
 // Create User Profile
 export const createUserProfile = async (
-  user: FirebaseAuthTypes.User,
   profileData: Omit<Profile, 'photo' | 'isOrganizer' | 'userId'>,
   photoUri: string,
 ): Promise<{success?: true; error?: string}> => {
   try {
+    const userId = auth().currentUser?.uid;
     // Upload photo to storage
-    const photoRef = storage().ref(`/profilePhotos/${user.uid}`);
+    const photoRef = storage().ref(`/profilePhotos/${userId}`);
     await photoRef.putFile(photoUri);
     const photoUrl = await photoRef.getDownloadURL();
 
@@ -34,11 +34,11 @@ export const createUserProfile = async (
       ...profileData,
       photo: photoUrl,
       isOrganizer: false,
-      userId: user.uid,
+      userId: userId,
     };
 
     // Save profile in Firestore
-    await firestore().collection('Profile').doc(user.uid).set(profile);
+    await firestore().collection('Profile').doc(userId).set(profile);
 
     return {success: true};
   } catch (error) {
@@ -49,9 +49,9 @@ export const createUserProfile = async (
 
 // Update User Profile
 export const updateUserProfile = async (
-  userId: string,
   updatedData: Partial<Profile>,
 ): Promise<{success?: true; error?: string}> => {
+  const userId = auth().currentUser?.uid;
   try {
     await firestore().collection('Profile').doc(userId).update(updatedData);
     return {success: true};
@@ -62,9 +62,11 @@ export const updateUserProfile = async (
 };
 
 // Get User Profile
-export const getUserProfile = async (
-  userId: string,
-): Promise<{data?: Profile; error?: string}> => {
+export const getUserProfile = async (): Promise<{
+  data?: Profile;
+  error?: string;
+}> => {
+  const userId = auth().currentUser?.uid;
   try {
     const doc = await firestore().collection('Profile').doc(userId).get();
 

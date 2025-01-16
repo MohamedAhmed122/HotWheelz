@@ -41,7 +41,7 @@ export const infoStyle = ScaledSheet.create({
   priceContainer: {
     marginHorizontal: 10,
     width: '50@ms',
-    height: '50@ms',
+    height: '45@ms',
     alignItems: 'center',
     justifyContent: 'center',
   },

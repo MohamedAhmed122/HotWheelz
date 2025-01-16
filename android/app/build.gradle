@@ -82,7 +82,7 @@ android {
 
     namespace "com.hotwheelz"
     defaultConfig {
-        applicationId "com.hotwheelz"
+        applicationId "lt.android.hot.wheel.z"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

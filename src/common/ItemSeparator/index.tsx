@@ -1,18 +1,19 @@
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {COLORS} from '@styles/index';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {COLORS} from 'styles';
 
-export function AppLoading() {
-  return (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={COLORS.primary} />
-    </View>
-  );
+interface Props {
+  color?: string;
 }
 
+export const ItemSeparator: React.FC<Props> = ({color = COLORS.gray}) => {
+  return <View style={[styles.separator, {backgroundColor: color}]} />;
+};
+
 const styles = StyleSheet.create({
-  loading: {
-    marginTop: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+  separator: {
+    width: '100%',
+    height: 2,
+    backgroundColor: COLORS.gray,
   },
 });

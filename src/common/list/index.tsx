@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginLeft: 10,
+    width: '90%',
     color: COLORS.darkGray,
   },
 });

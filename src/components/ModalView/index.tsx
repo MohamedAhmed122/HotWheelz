@@ -1,4 +1,4 @@
-import {AppButton} from 'common/button';
+import {AppButton, AppButtonProps} from 'common/button';
 import {AppText} from 'common/text';
 import {
   Pressable,
@@ -20,6 +20,7 @@ type Props = {
   visible: boolean;
   onSubmitModal?(): void;
   children: JSX.Element;
+  isLoading?: boolean;
 };
 
 export default function ModalContainer({
@@ -29,6 +30,7 @@ export default function ModalContainer({
   children,
   visible,
   onSubmitModal,
+  isLoading,
 }: Props) {
   return (
     <Modal
@@ -55,6 +57,7 @@ export default function ModalContainer({
             style={styles.button}
             title="Submit"
             onPress={onSubmitModal}
+            loading={isLoading}
           />
         )}
       </View>

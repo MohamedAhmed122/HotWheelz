@@ -1,16 +1,19 @@
-import {Image, StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text, StyleProp, ViewStyle} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {COLORS} from 'styles';
 
 type AppAvatarProps = {
   source: string;
   size?: number;
   fallbackText?: string;
+  style?: StyleProp<ViewStyle>;
 };
 
 const AppAvatar: React.FC<AppAvatarProps> = ({
   source,
   size = 50,
   fallbackText = 'A',
+  style,
 }) => {
   const isUri = source.startsWith('http') || source.startsWith('file://');
 
@@ -25,8 +28,12 @@ const AppAvatar: React.FC<AppAvatarProps> = ({
         },
       ]}>
       {isUri ? (
-        <Image
-          source={{uri: source}}
+        <FastImage
+          source={{
+            uri: source,
+            priority: FastImage.priority.normal,
+            cache: FastImage.cacheControl.immutable,
+          }}
           style={[
             styles.image,
             {
@@ -34,6 +41,7 @@ const AppAvatar: React.FC<AppAvatarProps> = ({
               height: size,
               borderRadius: size / 2,
             },
+            style,
           ]}
           resizeMode="cover"
         />
