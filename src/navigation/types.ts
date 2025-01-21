@@ -1,3 +1,5 @@
+import {User} from 'static-data/users';
+
 type NO_PARAMS = undefined;
 
 export enum AuthStackParams {
@@ -55,7 +57,7 @@ export type ProfileStackParamsList = {
 
 export type ChatStackParamsList = {
   [ChatStackParams.ChatList]: NO_PARAMS;
-  [ChatStackParams.ChatRoom]: {userId: string};
+  [ChatStackParams.ChatRoom]: {user: User};
 };
 
 export type MapStackParamsList = {

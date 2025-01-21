@@ -1,15 +1,16 @@
-import {StyleSheet, View, ViewProps} from 'react-native';
+import {StyleProp, StyleSheet, View, ViewProps, ViewStyle} from 'react-native';
 import {FC} from 'react';
 import {AppText} from 'common/text';
 
 interface Props extends ViewProps {
   title?: string;
   subtitle?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-export const AuthHeader: FC<Props> = ({title, subtitle}) => {
+export const AuthHeader: FC<Props> = ({title, subtitle, containerStyle}) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {title && <AppText style={styles.title}>{title}</AppText>}
       {subtitle && <AppText style={styles.subtitle}>{subtitle}</AppText>}
     </View>

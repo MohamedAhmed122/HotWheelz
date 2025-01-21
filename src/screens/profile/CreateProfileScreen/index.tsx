@@ -57,7 +57,7 @@ export default function CreateProfileScreen({
       return;
     }
 
-    const {success, error: wow} = await createUserProfile(
+    const {success} = await createUserProfile(
       {
         username: values.name,
         bio: values.bio,

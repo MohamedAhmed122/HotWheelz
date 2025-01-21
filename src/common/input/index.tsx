@@ -37,6 +37,7 @@ export const AppInput: React.FC<AppInputProps> = ({
       )}
       {children}
       <TextInput
+        multiline={isMulti}
         autoCapitalize="none"
         autoCorrect={false}
         style={styles.inputText}

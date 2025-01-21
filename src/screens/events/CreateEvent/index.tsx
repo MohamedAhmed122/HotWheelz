@@ -70,7 +70,7 @@ export default function CreateEvents() {
         onSubmit={onHandleSubmit}>
         <React.Fragment>
           <AppInputField name="title" placeholder="Title" />
-          <AppInputField name="desc" placeholder="Description" />
+          <AppInputField name="desc" placeholder="Description" isMulti />
           <PlacesAutoCompleteInputField
             name="location"
             placeholder="Location"

@@ -5,7 +5,7 @@ import {AppButton} from 'common/button';
 import {AppInput} from 'common/input';
 import {AppText} from 'common/text';
 
-import {loginWithEmail} from 'service/auth';
+import {getCurrentUser, loginWithEmail} from 'service/auth';
 
 import {Stepper} from 'common/stepper';
 import {AuthHeader} from 'components/AuthHeader';
@@ -13,7 +13,9 @@ import {mvs} from 'react-native-size-matters';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AuthStackParams, AuthStackParamsList} from 'navigation/types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import useStore from 'store';
+import {getUserProfile} from 'service/profile';
 
 type Props = NativeStackScreenProps<AuthStackParamsList>;
 
@@ -22,6 +24,8 @@ export default function LoginScreen({navigation}: Props) {
   const [loading, setLoading] = useState(false);
 
   const {top} = useSafeAreaInsets();
+  const {updateIsAuthenticated, isAuthenticated, updateUser, updateProfile} =
+    useStore();
 
   const onPressRegister = () => navigation.navigate(AuthStackParams.Register);
 
@@ -30,7 +34,8 @@ export default function LoginScreen({navigation}: Props) {
       setLoading(true);
       setErr(null);
       await loginWithEmail(values.email, values.password);
-      navigation.navigate(AuthStackParams.AuthUsername);
+
+      await getCurrentProfile();
     } catch (error: any) {
       setErr(error.message);
     } finally {
@@ -38,13 +43,25 @@ export default function LoginScreen({navigation}: Props) {
     }
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      updateUser(getCurrentUser());
+    }
+  }, [isAuthenticated]);
+
+  const getCurrentProfile = async () => {
+    await getUserProfile().then(res => {
+      if (res.data) {
+        updateProfile(res.data);
+        updateIsAuthenticated(true);
+      }
+    });
+  };
+
   return (
     <>
-      <View style={{marginTop: mvs(24) + top}}>
-        <Stepper currentIndex={0} steps={[0, 1, 2, 3, 4]} />
-      </View>
-
       <AuthHeader
+        containerStyle={{marginTop: mvs(24) + top}}
         title="Login To Your Account"
         subtitle="Enter your email and password to access your HotWheelz account and join the cycling community!"
       />

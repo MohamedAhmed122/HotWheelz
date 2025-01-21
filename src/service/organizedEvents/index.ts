@@ -194,3 +194,48 @@ export const getOrganizedEventById = (
     },
   );
 };
+export const getEventsByIds = async (
+  eventIds: string[],
+): Promise<
+  ApiResponse<{
+    matchedEvents: IOrganizedEvent[];
+  }>
+> => {
+  try {
+    // Fetch all organized events
+    const response = await getAllOrganizedEvents();
+
+    if (!response.isSuccess || !response.data) {
+      return {
+        isSuccess: false,
+        isError: true,
+        data: {
+          matchedEvents: [],
+        },
+      };
+    }
+
+    const {events} = response.data;
+
+    // Filter events by matching IDs
+    const matchedEvents = events.filter(event => eventIds.includes(event.id));
+
+    return {
+      isSuccess: true,
+      isError: false,
+      data: {
+        matchedEvents,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching events by IDs:', error);
+
+    return {
+      isSuccess: false,
+      isError: true,
+      data: {
+        matchedEvents: [],
+      },
+    };
+  }
+};

@@ -8,23 +8,24 @@ import {AppText} from 'common/text';
 import AppAvatar from 'common/avatar';
 import {COLORS} from 'styles';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {
-  ChatStackParams,
-  ProfileStackParams,
-  ProfileStackParamsList,
-} from 'navigation/types';
+import {ProfileStackParams, ProfileStackParamsList} from 'navigation/types';
 import {styles} from './styles';
 import useStore from 'store';
 import {Profile, getUserProfile} from 'service/profile';
-import CreateProfileScreen from '../CreateProfileScreen';
+
 import {logout} from 'service/auth';
+import {AppLoading} from 'common/loading';
 
 type Props = NativeStackScreenProps<ProfileStackParamsList>;
 
 const ProfileScreen: React.FC<Props> = ({navigation}) => {
-  const {user: currentUser, updateProfile, updateIsAuthenticated} = useStore();
+  const {
+    user: currentUser,
+    updateProfile,
+    updateIsAuthenticated,
+    profile,
+  } = useStore();
   const [error, setError] = useState<string | undefined>();
-  const [profile, setProfile] = useState<Profile | undefined>();
 
   const handleEditProfile = useCallback(
     () => navigation.navigate(ProfileStackParams.EditProfile, {userId: ''}),
@@ -43,32 +44,23 @@ const ProfileScreen: React.FC<Props> = ({navigation}) => {
 
   const handleGetUserProfile = () => {
     getUserProfile().then(res => {
-      setProfile(res.data);
       res.data && updateProfile(res.data);
       setError(res.error);
     });
   };
-  console.log(error);
+
   useEffect(() => {
     if (currentUser?.uid) {
-      console.log('wowooww');
       handleGetUserProfile();
     }
   }, [currentUser]);
 
-  if (error === 'NOT_FOUND') {
-    return <CreateProfileScreen getUserProfile={handleGetUserProfile} />;
-  }
   if (error) {
     return <View>Error please try again Later</View>;
   }
 
   if (!profile) {
-    return (
-      <View>
-        <AppText>loading...</AppText>
-      </View>
-    );
+    return <AppLoading />;
   }
 
   return (
@@ -152,7 +144,13 @@ const ProfileSocialLinks: React.FC<ProfileSocialLinksProps> = ({
   navigateToChatRoom,
 }) => (
   <View style={styles.socialLinksContainer}>
-    <SocialIcon icon="🚴🏿‍♂️" onPress={navigateToChatRoom} />
+    {/* log-out */}
+
+    <SocialIcon
+      IconComponent={Icon}
+      iconProps={{name: 'log-out', size: 24, color: COLORS.primary}}
+      onPress={navigateToChatRoom}
+    />
     <SocialIcon
       IconComponent={Icon}
       iconProps={{name: 'edit', size: 24, color: COLORS.primary}}

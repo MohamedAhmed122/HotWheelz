@@ -17,6 +17,7 @@ import {events} from 'static-data/events';
 import FixedIcon from 'common/fixedIcon';
 import {IOrganizedEvent, getAllOrganizedEvents} from 'service/organizedEvents';
 import {AppText} from 'common/text';
+import useStore from 'store';
 
 const TABS = [
   {tabKey: 'UP_COMING', tabName: 'UP COMING'},
@@ -26,6 +27,7 @@ const TABS = [
 type NavigationProps = NativeStackNavigationProp<EventsStackParamsList>;
 
 const EventsListScreen: React.FC = () => {
+  const {profile} = useStore();
   const [activeTab, setActiveTab] = useState<string>(TABS[0].tabKey);
   const navigation = useNavigation<NavigationProps>();
   const [isLoading, setIsLoading] = useState(false);
@@ -114,8 +116,8 @@ const EventsListScreen: React.FC = () => {
           />
         )}
       />
-      {/* Uncomment and customize the FixedButton as needed */}
-      <FixedIcon onPress={handleCreateButtonPress} />
+
+      {profile.isOrganizer && <FixedIcon onPress={handleCreateButtonPress} />}
     </SafeAreaView>
   );
 };
