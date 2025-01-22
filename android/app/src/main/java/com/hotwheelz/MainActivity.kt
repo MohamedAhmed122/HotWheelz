@@ -1,4 +1,4 @@
-package lt.android.hot.wheel.z;
+package com.hotwheelz
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity
